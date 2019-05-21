@@ -273,7 +273,7 @@ server.get('/api/getBrandSale', function (req, res, next) {
             }
             console.log(result);
             let data={};
-            data.chart="bar";
+            data.chart="table";
             data.labels=["品牌","销售额", "订单量"];
             data.datasets=[];
             data.datasets[0]={};
