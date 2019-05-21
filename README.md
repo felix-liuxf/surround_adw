@@ -1,5 +1,16 @@
 # surround_adw
 
+
+### 用户所属行业的柱状图
+http://129.213.117.204:3050/api/getUserIndustry
+### 用户收入的柱状图
+http://129.213.117.204:3050/api/getUserSalaryLevel
+### 支付方式的饼状图
+http://129.213.117.204:3050/api/getPaymodePie
+### 品牌销售情况报表
+http://129.213.117.204:3050/api/getBrandSale
+
+
 ### 不比较指定一天
 
 http://129.213.117.204:3050/api/getBillAmount?vdate=1558330080000
