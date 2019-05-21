@@ -119,14 +119,17 @@ server.get('/api/getUserIndustry', function (req, res, next) {
             console.log(result);
             let data={};
             data.chart="bar";
-            data.data=[];
             data.labels=[];
+            data.datasets=[];
+            data.datasets[0]={};
+            data.datasets[0].name="foo";
+            data.datasets[0].data=[];
            
             //data.data[0]="11";
             for(let i=0;i<result.rows.length;i++)
             {
                 data.labels[i]=(result.rows[i].shift());
-                data.data[i]=(result.rows[i].shift());
+                data.datasets[0].data[i]=(result.rows[i].shift());
               
             }
 
@@ -167,14 +170,17 @@ server.get('/api/getUserSalaryLevel', function (req, res, next) {
             console.log(result);
             let data={};
             data.chart="bar";
-            data.data=[];
             data.labels=[];
+            data.datasets=[];
+            data.datasets[0]={};
+            data.datasets[0].name="foo";
+            data.datasets[0].data=[];
            
             //data.data[0]="11";
             for(let i=0;i<result.rows.length;i++)
             {
                 data.labels[i]=(result.rows[i].shift());
-                data.data[i]=(result.rows[i].shift());
+                data.datasets[0].data[i]=(result.rows[i].shift());
               
             }
 
@@ -212,22 +218,26 @@ server.get('/api/getPaymodePie', function (req, res, next) {
             }
             console.log(result);
             let data={};
-            data.chart="pie";
-            data.data=[];
+            data.chart="pie";  
             data.labels=[];
+            data.datasets=[];
+            data.datasets[0]={};
+            data.datasets[0].name="foo";
+            data.datasets[0].data=[];
+
             let per100=0;
             //data.data[0]="11";
             for(let i=0;i<result.rows.length;i++)
             {
                 data.labels[i]=(result.rows[i].shift());
-                data.data[i]=(result.rows[i].shift());
-                per100+=data.data[i];
+                data.datasets[0].data[i]=(result.rows[i].shift());
+                per100+=data.datasets[0].data[i];
               
             }
 
-            for(let p=0;p<data.data.length;p++)
+            for(let p=0;p<data.datasets[0].data.length;p++)
             {
-                data.data[p]=(Math.round(data.data[p] * 100)/per100).toFixed(2)-0;
+                data.datasets[0].data[p]=(Math.round(data.datasets[0].data[p] * 100)/per100).toFixed(2)-0;
             }
             //data.data=dataICount;
             //data.labels=dataIndustry;
@@ -244,7 +254,64 @@ server.get('/api/getPaymodePie', function (req, res, next) {
     });
 
 });
+server.get('/api/getBrandSale', function (req, res, next) {
+    console.log("getUserSalaryLevel");
+    oracledb.getConnection({
+        user: dbConfig.dbuser,
+        password: dbConfig.dbpassword,
+        connectString: dbConfig.connectString
+    },
+    function(err, connection) {
+        if (err) {
+            error = err;
+            return;
+        }
+        connection.execute('select brandname,sum(billamount) billamount ,count(orderid) orderamount from  sur_order_item group by brandname', [], function(err, result) {
+            if (err) {
+                error = err;
+                return;
+            }
+            console.log(result);
+            let data={};
+            data.chart="bar";
+            data.labels=["品牌","销售额", "订单量"];
+            data.datasets=[];
+            data.datasets[0]={};
+            data.datasets[0].name="品牌";
+            data.datasets[0].data=[];
+            data.datasets[1]={};
+            data.datasets[1].name="销售额";
+            data.datasets[1].data=[];
+            data.datasets[2]={};
+            data.datasets[2].name="订单量";
+            data.datasets[2].data=[];
+           
+            //data.data[0]="11";
+            for(let i=0;i<result.rows.length;i++)
+            {
 
+                data.datasets[0].data[i]=(result.rows[i].shift());
+                data.datasets[1].data[i]=(result.rows[i].shift());
+                data.datasets[2].data[i]=(result.rows[i].shift());
+                
+              
+            }
+
+            //data.data=dataICount;
+            //data.labels=dataIndustry;
+            //res.send(result.rows);
+            res.send(data);
+            
+            connection.close(function(err) {
+                if (err) {
+                    console.log(err);
+                }
+                return next();
+            });
+        })
+    });
+
+});
 server.get('/api/getBillAmount', function (req, res, next) {
     console.log("getBillamount:day:"+req.query.day+",week:"+req.query.week);
     
