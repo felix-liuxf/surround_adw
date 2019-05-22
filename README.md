@@ -26,3 +26,6 @@ http://129.213.117.204:3050/api/getBillAmount?vdate=1558330080000
 
 ### 比较指定天
 http://129.213.117.204:3050/api/getBillAmount?iscompare=Y&vdate=1558330080000&comparedate=1558157280000
+
+### 比较指定周
+http://129.213.117.204:3050/api/getBillAmount?iscompare=Y&vweek=上上周&compareweek=本周
