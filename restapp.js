@@ -326,7 +326,7 @@ server.get('/api/getBillAmount', function (req, res, next) {
 			return;
 		}
 		if(req.query.iscompare!="Y"){
-
+			//不比较指定一天
 			let vdate=req.query.vdate+"";
 
 			if (vdate!=''&&vdate!='undefined'){
@@ -354,8 +354,10 @@ server.get('/api/getBillAmount', function (req, res, next) {
 					}
 
             //res.send(result.rows);
-            res.send(data);
-            
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');   
+            //res.send(data);
+            res.write(data);
+            res.end();
             connection.close(function(err) {
             	if (err) {
             		console.log(err);
@@ -469,7 +471,7 @@ server.get('/api/getBillAmount', function (req, res, next) {
 						return;
 					}
 					console.log(result);
-					let data={};
+					let data="";
 					let date1="";
 					let date2="";
 					let date1amount=0;
@@ -478,24 +480,29 @@ server.get('/api/getBillAmount', function (req, res, next) {
 					{
 						date1=result.rows[0].shift();
 						date1amount=result.rows[0].shift();
-						data.vdate=date1+"销量为"+date1amount+"元";
+						data=date1+"销量为"+date1amount+"元,";
 
 					}
 					if(result.rows.length>=2)
 					{
 						date2=result.rows[1].shift();
 						date2amount=result.rows[1].shift();
-						data.comparedate=date2+"销量为"+date2amount+"元";
+						data=data+date2+"销量为"+date2amount+"元,";
 						let per=Math.round((date2amount-date1amount) / date1amount * 10000) / 100.00;
 
-						data.compareper="增长"+per+"%";
+						data=data+"增长"+per+"%";
 
 					}
 
 
 
             //res.send(result.rows);
-            res.send(data);
+            //res.send(data);
+
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');   
+            //res.send(data);
+            res.write(data);
+            res.end();
             
             connection.close(function(err) {
             	if (err) {
