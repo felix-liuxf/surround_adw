@@ -422,7 +422,7 @@ server.get('/api/getBillAmount', function (req, res, next) {
 					data.labels=[];
 					data.datasets=[];
 					data.datasets[0]={};
-					data.datasets[0].name="foo";
+					data.datasets[0].name="销售额";
 					data.datasets[0].data=[];
 
             //data.data[0]="11";
@@ -594,11 +594,11 @@ server.get('/api/getBillAmount', function (req, res, next) {
 				data.labels=["周一","周二","周三","周四","周五","周六","周日"];
 				data.datasets=[];
 				data.datasets[0]={};
-				data.datasets[0].name="foo";
+				data.datasets[0].name="销售额";
 				data.datasets[0].data=[];
 
 				data.datasets[1]={};
-				data.datasets[1].name="foo";
+				data.datasets[1].name="销售额";
 				data.datasets[1].data=[];
 				let tmpResult=[];
 
