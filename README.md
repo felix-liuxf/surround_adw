@@ -24,6 +24,10 @@ http://129.213.117.204:3050/api/getBillAmount?vdate=1558330080000
 - http://129.213.117.204:3050/api/getBillAmount?vweek=上上周
 
 
+### 当第一次输入今日销量，对比的时候输入了上周。那应该直接显示上周的销量报表。
+http://129.213.117.204:3050/api/getBillAmount?vdate=1558506360000&vweek=&comparedate=&compareweek=%E4%B8%8A%E5%91%A8&iscompare=Y
+
+
 ### 比较指定天
 http://129.213.117.204:3050/api/getBillAmount?iscompare=Y&vdate=1558330080000&comparedate=1558157280000
 
