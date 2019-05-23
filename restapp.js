@@ -447,52 +447,55 @@ server.get('/api/getBillAmount', function (req, res, next) {
 			}
 		}else{
 			let vdate=req.query.vdate+"";
-			let comparedate=req.query.comparedate;
-			let vweek=req.query.vweek;
-			let compareweek=req.query.compareweek;
+			let comparedate=req.query.comparedate+"";
+			let vweek=req.query.vweek+"";
+			let compareweek=req.query.compareweek+"";
 			// compare data
 			if(vdate!=''&&vdate!='undefined'){
-				console.log("vdate:"+vdate);
-				console.log("comparedate:"+comparedate);
-				let formattedDate =""
-				let date1= new Date(vdate-0);
-				let formattedDate1 = date1.getFullYear() + "-" + ('0' + (date1.getMonth() + 1)).slice(-2) +"-"+ ('0' + date1.getDate()).slice(-2) ;
-				let date2= new Date(comparedate-0);
-
-				let formattedDate2 = date2.getFullYear() + "-" + ('0' + (date2.getMonth() + 1)).slice(-2) +"-"+ ('0' + date2.getDate()).slice(-2) ;
-				formattedDate ="'"+formattedDate1+"','"+formattedDate2+"'";
-				console.log("formattedDate:"+formattedDate);
 
 
+				if(comparedate!=''&&comparedate!='undefined'){
+					console.log("vdate:"+vdate);
+					console.log("comparedate:"+comparedate);
+					let formattedDate =""
+					let date1= new Date(vdate-0);
+					let formattedDate1 = date1.getFullYear() + "-" + ('0' + (date1.getMonth() + 1)).slice(-2) +"-"+ ('0' + date1.getDate()).slice(-2) ;
+					let date2= new Date(comparedate-0);
 
-				connection.execute("select finishtime,sum(billamount) billTotal from sur_order where finishtime in("+formattedDate+") group by finishtime order by finishtime", [], function(err, result) {
-					if (err) {
-						error = err;
-						return;
-					}
-					console.log(result);
-					let data="";
-					let date1="";
-					let date2="";
-					let date1amount=0;
-					let date2amount=0;
-					if(result.rows.length>=1)
-					{
-						date1=result.rows[0].shift();
-						date1amount=result.rows[0].shift();
-						data=date1+"销量为"+date1amount+"元,";
+					let formattedDate2 = date2.getFullYear() + "-" + ('0' + (date2.getMonth() + 1)).slice(-2) +"-"+ ('0' + date2.getDate()).slice(-2) ;
+					formattedDate ="'"+formattedDate1+"','"+formattedDate2+"'";
+					console.log("formattedDate:"+formattedDate);
 
-					}
-					if(result.rows.length>=2)
-					{
-						date2=result.rows[1].shift();
-						date2amount=result.rows[1].shift();
-						data=data+date2+"销量为"+date2amount+"元,";
-						let per=Math.round((date2amount-date1amount) / date1amount * 10000) / 100.00;
 
-						data=data+"增长"+per+"%";
 
-					}
+					connection.execute("select finishtime,sum(billamount) billTotal from sur_order where finishtime in("+formattedDate+") group by finishtime order by finishtime", [], function(err, result) {
+						if (err) {
+							error = err;
+							return;
+						}
+						console.log(result);
+						let data="";
+						let date1="";
+						let date2="";
+						let date1amount=0;
+						let date2amount=0;
+						if(result.rows.length>=1)
+						{
+							date1=result.rows[0].shift();
+							date1amount=result.rows[0].shift();
+							data=date1+"销量为"+date1amount+"元,";
+
+						}
+						if(result.rows.length>=2)
+						{
+							date2=result.rows[1].shift();
+							date2amount=result.rows[1].shift();
+							data=data+date2+"销量为"+date2amount+"元,";
+							let per=Math.round((date2amount-date1amount) / date1amount * 10000) / 100.00;
+
+							data=data+"增长"+per+"%";
+
+						}
 
 
 
@@ -511,6 +514,89 @@ server.get('/api/getBillAmount', function (req, res, next) {
             	return next();
             });
         })
+				}
+				if(compareweek!=''&&compareweek!='undefined'){
+					console.log("vdate:"+vdate);
+					console.log("compareweek:"+compareweek);
+					let curDate= new Date();
+					let formattedDate="";
+					if(compareweek=='本周'){
+
+						for(let w=0;w<curDate.getDay();w++)
+						{
+							let tmpDate=new Date(curDate.getTime() - 24*60*60*1000*w);
+							let formattedTmpDate = tmpDate.getFullYear() + "-" + ('0' + (tmpDate.getMonth() + 1)).slice(-2) +"-"+ ('0' + tmpDate.getDate()).slice(-2) ;
+							console.log(formattedTmpDate);
+							formattedDate=formattedDate+"'"+formattedTmpDate+"',";
+						}
+
+
+					}
+					if(compareweek=='上周'){
+						let curDay=curDate.getDay();
+
+						for(let w=0;w<7;w++)
+						{
+							let tmpDate=new Date(curDate.getTime() - 24*60*60*1000*(w+curDay));
+							let formattedTmpDate = tmpDate.getFullYear() + "-" + ('0' + (tmpDate.getMonth() + 1)).slice(-2) +"-"+ ('0' + tmpDate.getDate()).slice(-2) ;
+							console.log(formattedTmpDate);
+							formattedDate=formattedDate+"'"+formattedTmpDate+"',";
+						}
+
+
+					}
+					if(compareweek=='上上周'){
+						let curDay=curDate.getDay();
+
+						for(let w=0;w<7;w++)
+						{
+							let tmpDate=new Date(curDate.getTime() - 24*60*60*1000*(w+7+curDay));
+							let formattedTmpDate = tmpDate.getFullYear() + "-" + ('0' + (tmpDate.getMonth() + 1)).slice(-2) +"-"+ ('0' + tmpDate.getDate()).slice(-2) ;
+							console.log(formattedTmpDate);
+							formattedDate=formattedDate+"'"+formattedTmpDate+"',";
+						}
+
+
+					}
+
+					formattedDate=formattedDate+"''",
+					console.log("formattedDate:"+formattedDate);
+
+					connection.execute("select finishtime,sum(billamount) billTotal from sur_order where finishtime in("+formattedDate+") group by finishtime order by finishtime", [], function(err, result) {
+						if (err) {
+							error = err;
+							return;
+						}
+						console.log(result);
+						let data={};
+						data.chart="line";
+						data.labels=[];
+						data.datasets=[];
+						data.datasets[0]={};
+						data.datasets[0].name="销售额";
+						data.datasets[0].data=[];
+
+            //data.data[0]="11";
+            for(let i=0;i<result.rows.length;i++)
+            {
+            	data.labels[i]=(result.rows[i].shift());
+            	data.datasets[0].data[i]=(result.rows[i].shift());
+
+            }
+
+            //res.send(result.rows);
+            res.send(data);
+            
+
+            connection.close(function(err) {
+            	if (err) {
+            		console.log(err);
+            	}
+            	return next();
+            });
+        })
+				}
+
 			}else{
 
 			//compare week
