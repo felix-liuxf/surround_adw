@@ -33,3 +33,9 @@ http://129.213.117.204:3050/api/getBillAmount?iscompare=Y&vdate=1558330080000&co
 
 ### 比较指定周
 http://129.213.117.204:3050/api/getBillAmount?iscompare=Y&vweek=上上周&compareweek=本周
+
+***
+### 更新数据库里面的时间字段finishtime
+```
+update sur_order set finishtime = to_char (to_date(finishtime,'YYYY-MM-DD')+30,'YYYY-MM-DD') 
+```
