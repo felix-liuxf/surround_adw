@@ -37,5 +37,6 @@ http://129.213.117.204:3050/api/getBillAmount?iscompare=Y&vweek=上上周&compar
 ***
 ### 更新数据库里面的时间字段finishtime
 ```
-update sur_order set finishtime = to_char (to_date(finishtime,'YYYY-MM-DD')+30,'YYYY-MM-DD') 
+update sur_order set finishtime = to_char(to_date(finishtime,'yyyy-mm-dd')-10,'yyyy-mm-dd') 
+
 ```
